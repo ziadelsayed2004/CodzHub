@@ -33,7 +33,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className={`site-header ${scrolled ? 'is-scrolled' : ''}`}>
+      <header className={`site-header ${scrolled ? 'is-scrolled' : ''} ${menuOpen ? 'menu-is-open' : ''}`}>
         <div className="nav-shell container glass glass-pill">
           {/* Brand Logo */}
           <Link to="/" className="brand-logo-container">
