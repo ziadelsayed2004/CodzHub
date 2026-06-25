@@ -1,0 +1,87 @@
+/* Desktop hide utility by default */
+.desktop-hide {
+  display: none !important;
+}
+
+/* Tablet / Landscape Mobile */
+@media (max-width: 992px) {
+  .container {
+    padding: 0 var(--space-md);
+  }
+
+  .grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+  }
+
+  .grid-2 {
+    gap: var(--space-lg);
+  }
+}
+
+/* Mobile Screens */
+@media (max-width: 768px) {
+  .grid-2, .grid-3 {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  h1 {
+    font-size: 2.2rem;
+  }
+
+  h2 {
+    font-size: 1.8rem;
+  }
+
+  h3 {
+    font-size: 1.4rem;
+  }
+  
+  .mobile-hide {
+    display: none !important;
+  }
+
+  .desktop-hide {
+    display: block !important;
+  }
+  
+  /* Make menu-toggle button flex container on mobile */
+  button.menu-toggle.desktop-hide {
+    display: flex !important;
+  }
+
+
+
+  /* Stack hero actions vertically on mobile to prevent horizontal overflow */
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    align-items: stretch;
+  }
+
+  /* Collapse services grid to 1 column on mobile to prevent overflow */
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Small Screens */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .card-glass {
+    padding: var(--space-md);
+  }
+}

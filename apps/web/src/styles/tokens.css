@@ -1,0 +1,164 @@
+@font-face {
+  font-family: 'Lemonada';
+  src: url('/fonts/Lemonada/Lemonada-VariableFont_wght.ttf') format('truetype');
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* CodzHub Official Brand Palette */
+  --cz-void: #070A12;
+  --cz-ink: #0B1020;
+  --cz-indigo: #6D5BFF;
+  --cz-blue: #2F7BFF;
+  --cz-cyan: #12D8FF;
+  --cz-mint: #49F2A8;
+  --cz-soft: #EEF3FF;
+  --cz-white: #FFFFFF;
+
+  --cz-void-rgb: 7, 10, 18;
+  --cz-ink-rgb: 11, 16, 32;
+  --cz-indigo-rgb: 109, 91, 255;
+  --cz-blue-rgb: 47, 123, 255;
+  --cz-cyan-rgb: 18, 216, 255;
+  --cz-mint-rgb: 73, 242, 168;
+  --cz-soft-rgb: 238, 243, 255;
+  --cz-white-rgb: 255, 255, 255;
+
+  /* Typography */
+  --font-brand: 'Lemonada', cursive, system-ui;
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+
+  /* Animations & Transitions */
+  --ease-glass: ease-in-out;
+  --ease-soft: ease-in-out;
+
+  --glass-radius-sm: 16px;
+  --glass-radius-md: 22px;
+  --glass-radius-lg: 32px;
+  --glass-radius-pill: 999px;
+
+  --glass-blur-sm: 8px;
+  --glass-blur-md: 14px;
+  --glass-blur-lg: 22px;
+
+  --glass-reflex-light: 1;
+  --glass-reflex-dark: 1;
+  --glass-saturation: 150%;
+
+  --duration-fast: 160ms;
+  --duration-medium: 400ms;
+  --duration-slow: 620ms;
+
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-xxl: 3rem;
+
+  /* Border Radius compatibility */
+  --radius-sm: var(--glass-radius-sm);
+  --radius-md: var(--glass-radius-md);
+  --radius-lg: var(--glass-radius-lg);
+  --radius-full: var(--glass-radius-pill);
+
+  /* Transitions compatibility */
+  --transition-fast: var(--duration-fast) ease-in-out;
+  --transition-normal: var(--duration-medium) ease-in-out;
+  --transition-slow: var(--duration-slow) ease-in-out;
+  --transition-spring: 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  --transition-apple: var(--duration-slow) ease-in-out;
+
+  /* Shadows compatibility */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Default Theme (Dark Mode) */
+:root,
+[data-theme="dark"] {
+  --page-bg: #070A12;
+  --page-bg-soft: #0B1020;
+  --text-main: #FFFFFF;
+  --text-muted: rgba(238, 243, 255, 0.72);
+  --glass-color: rgba(187, 187, 188, 0.10);
+  --glass-color-strong: rgba(187, 187, 188, 0.16);
+  --glass-border: rgba(255, 255, 255, 0.13);
+  --glass-action: #12D8FF;
+  --glass-reflex-light: 0.38;
+  --glass-reflex-dark: 1.8;
+  --shadow-glass: 0 18px 55px rgba(0, 0, 0, 0.32);
+
+  /* Legacy compatibility mappings */
+  --bg-main: var(--page-bg);
+  --bg-card: var(--page-bg-soft);
+  --border-color: var(--glass-border);
+  --primary: var(--cz-indigo);
+  --secondary: var(--cz-blue);
+  --accent: var(--cz-cyan);
+  --glass-bg: var(--glass-color);
+  --glass-blur: blur(var(--glass-blur-md)) saturate(var(--glass-saturation));
+  --cta-shadow: rgba(109, 91, 255, 0.35);
+  --skeleton-base: rgba(255, 255, 255, 0.08);
+  --skeleton-highlight: rgba(255, 255, 255, 0.18);
+}
+
+/* Light Theme */
+[data-theme="light"] {
+  --page-bg: #EEF3FF;
+  --page-bg-soft: #FFFFFF;
+  --text-main: #0B1020;
+  --text-muted: rgba(11, 16, 32, 0.66);
+  --glass-color: rgba(255, 255, 255, 0.44);
+  --glass-color-strong: rgba(255, 255, 255, 0.68);
+  --glass-border: rgba(11, 16, 32, 0.10);
+  --glass-action: #2F7BFF;
+  --glass-reflex-light: 1;
+  --glass-reflex-dark: 0.55;
+  --shadow-glass: 0 18px 50px rgba(11, 16, 32, 0.12);
+
+  /* Legacy compatibility mappings */
+  --bg-main: var(--page-bg);
+  --bg-card: var(--page-bg-soft);
+  --border-color: var(--glass-border);
+  --primary: var(--cz-indigo);
+  --secondary: var(--cz-blue);
+  --accent: var(--cz-cyan);
+  --glass-bg: var(--glass-color);
+  --glass-blur: blur(var(--glass-blur-md)) saturate(var(--glass-saturation));
+  --cta-shadow: rgba(109, 91, 255, 0.18);
+  --skeleton-base: rgba(11, 16, 32, 0.06);
+  --skeleton-highlight: rgba(11, 16, 32, 0.14);
+}
+
+/* Dim Theme */
+[data-theme="dim"] {
+  --page-bg: #152433;
+  --page-bg-soft: #1B2D3F;
+  --text-main: #D5DBE2;
+  --text-muted: rgba(213, 219, 226, 0.7);
+  --glass-color: rgba(21, 36, 51, 0.1);
+  --glass-color-strong: rgba(21, 36, 51, 0.16);
+  --glass-border: rgba(255, 255, 255, 0.06);
+  --glass-action: #FF75C3;
+  --glass-reflex-light: 0.5;
+  --glass-reflex-dark: 1.2;
+  --shadow-glass: 0 18px 50px rgba(0, 0, 0, 0.25);
+
+  /* Legacy compatibility mappings */
+  --bg-main: var(--page-bg);
+  --bg-card: var(--page-bg-soft);
+  --border-color: var(--glass-border);
+  --primary: #FF48A9;
+  --secondary: #99DEFF;
+  --accent: #FF75C3;
+  --glass-bg: var(--glass-color);
+  --glass-blur: blur(var(--glass-blur-md)) saturate(var(--glass-saturation));
+  --cta-shadow: rgba(255, 72, 169, 0.35);
+  --skeleton-base: rgba(255, 255, 255, 0.06);
+  --skeleton-highlight: rgba(255, 255, 255, 0.14);
+}
