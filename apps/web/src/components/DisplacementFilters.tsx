@@ -1,9 +1,8 @@
 import base64_0 from './base64_0.txt?raw';
-import base64_1 from './base64_1.txt?raw';
 
 export default function DisplacementFilters() {
   const map0 = base64_0.trim();
-  const map1 = base64_1.trim();
+  const map1 = base64_0.trim();
 
   return (
     <div className="switcher__filter">

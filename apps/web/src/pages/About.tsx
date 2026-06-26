@@ -1,17 +1,12 @@
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext.tsx';
+import { usePageLoading } from '../hooks/usePageLoading.ts';
 import SkeletonLoader from '../components/SkeletonLoader.tsx';
 import TerminalWindow from '../components/TerminalWindow.tsx';
 
 export default function About() {
   const { t } = useLanguage();
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 600);
-    return () => clearTimeout(timer);
-  }, []);
+  const loading = usePageLoading();
 
   if (loading) {
     return (

@@ -3,6 +3,7 @@ import cors from 'cors';
 import path from 'path';
 import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
+import rateLimit from 'express-rate-limit';
 import { ContactRequest, HealthResponse } from '@codzhub/shared';
 
 // Load environment variables
@@ -11,8 +12,24 @@ dotenv.config({ path: path.join(__dirname, '../.env') });
 const app = express();
 const port = process.env.PORT || 3001;
 
-app.use(cors());
-app.use(express.json());
+// --- Security: Restrict CORS to known origins ---
+const allowedOrigins = process.env.CORS_ORIGINS
+  ? process.env.CORS_ORIGINS.split(',')
+  : ['http://localhost:3000'];
+app.use(cors({ origin: allowedOrigins }));
+
+// --- Security: Explicit body size limit ---
+app.use(express.json({ limit: '16kb' }));
+
+// --- Security: HTML escaping for email content ---
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
 
 // Configure Nodemailer Transporter
 const transporter = nodemailer.createTransport({
@@ -46,19 +63,19 @@ async function sendContactEmail(request: ContactRequest) {
     subject: `New Contact Request: ${request.projectType} from ${request.name}`,
     html: `
       <h2>New Contact Request Received</h2>
-      <p><strong>Name:</strong> ${request.name}</p>
-      <p><strong>Email:</strong> ${request.email}</p>
-      <p><strong>Phone:</strong> ${request.phone || 'N/A'}</p>
-      <p><strong>Company:</strong> ${request.company || 'N/A'}</p>
-      <p><strong>Project Type:</strong> ${request.projectType}</p>
-      <p><strong>Budget Range:</strong> ${request.budgetRange || 'N/A'}</p>
-      <p><strong>Timeline:</strong> ${request.timeline || 'N/A'}</p>
-      <p><strong>Locale:</strong> ${request.locale}</p>
-      <p><strong>Created At:</strong> ${request.createdAt}</p>
+      <p><strong>Name:</strong> ${escapeHtml(request.name)}</p>
+      <p><strong>Email:</strong> ${escapeHtml(request.email)}</p>
+      <p><strong>Phone:</strong> ${escapeHtml(request.phone || 'N/A')}</p>
+      <p><strong>Company:</strong> ${escapeHtml(request.company || 'N/A')}</p>
+      <p><strong>Project Type:</strong> ${escapeHtml(request.projectType)}</p>
+      <p><strong>Budget Range:</strong> ${escapeHtml(request.budgetRange || 'N/A')}</p>
+      <p><strong>Timeline:</strong> ${escapeHtml(request.timeline || 'N/A')}</p>
+      <p><strong>Locale:</strong> ${escapeHtml(request.locale)}</p>
+      <p><strong>Created At:</strong> ${escapeHtml(request.createdAt || '')}</p>
       <hr />
       <h3>Message:</h3>
-      <p style="white-space: pre-wrap;">${request.message}</p>
-      ${request.referenceLink ? `<p><strong>Reference Link:</strong> <a href="${request.referenceLink}">${request.referenceLink}</a></p>` : ''}
+      <p style="white-space: pre-wrap;">${escapeHtml(request.message)}</p>
+      ${request.referenceLink ? `<p><strong>Reference Link:</strong> ${escapeHtml(request.referenceLink)}</p>` : ''}
     `
   };
 
@@ -79,8 +96,17 @@ app.get('/api/health', (req, res) => {
   res.json(response);
 });
 
+// --- Security: Rate limit contact form submissions ---
+const contactLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests, please try again later' }
+});
+
 // POST /api/contact-requests
-app.post('/api/contact-requests', async (req, res) => {
+app.post('/api/contact-requests', contactLimiter, async (req, res) => {
   try {
     const body = req.body as ContactRequest;
     
@@ -96,9 +122,12 @@ app.post('/api/contact-requests', async (req, res) => {
     const locale = body.locale || 'en';
     const createdAt = new Date().toISOString();
 
-    // Simple validation
+    // --- Security: Server-side validation ---
     if (!name || !email || !projectType || !message) {
       return res.status(400).json({ error: 'Missing required fields' });
+    }
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      return res.status(400).json({ error: 'Invalid email address' });
     }
 
     const savedRequest: ContactRequest = {
@@ -122,10 +151,15 @@ app.post('/api/contact-requests', async (req, res) => {
     });
 
     return res.status(201).json(savedRequest);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error processing contact request:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
+});
+
+// --- Security: Catch-all 404 for undefined API routes ---
+app.use('/api', (_req, res) => {
+  res.status(404).json({ error: 'Not found' });
 });
 
 app.listen(port, () => {

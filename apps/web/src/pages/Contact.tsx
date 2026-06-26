@@ -1,18 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext.tsx';
 import { ContactRequest } from '@codzhub/shared';
+import { usePageLoading } from '../hooks/usePageLoading.ts';
 import SkeletonLoader from '../components/SkeletonLoader.tsx';
 import TerminalWindow from '../components/TerminalWindow.tsx';
 import CustomSelect from '../components/CustomSelect.tsx';
 
 export default function Contact() {
   const { t, language } = useLanguage();
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 600);
-    return () => clearTimeout(timer);
-  }, []);
+  const loading = usePageLoading();
 
   const [formData, setFormData] = useState({
     name: '',
